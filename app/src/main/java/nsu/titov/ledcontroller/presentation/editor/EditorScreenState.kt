@@ -1,4 +1,2 @@
-package ru.nsu.ledcontroller.presentation.editor
+package nsu.titov.ledcontroller.presentation.editor
 
-class EditorScreenState {
-}

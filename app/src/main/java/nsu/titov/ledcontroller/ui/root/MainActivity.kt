@@ -1,19 +1,20 @@
-package ru.nsu.ledcontroller.ui.root
+package nsu.titov.ledcontroller.ui.root
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.appcompat.app.AppCompatActivity
-import ru.nsu.ledcontroller.ui.editor.GraphicsEditorScreen
-import ru.nsu.ledcontroller.ui.main.MainScreen
+import androidx.compose.material3.MaterialTheme
+import nsu.titov.ledcontroller.ui.editor.CanvasEditorScreen
 
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-             GraphicsEditorScreen()
+            MaterialTheme {
+                CanvasEditorScreen()
+            }
+
         }
     }
-
 }

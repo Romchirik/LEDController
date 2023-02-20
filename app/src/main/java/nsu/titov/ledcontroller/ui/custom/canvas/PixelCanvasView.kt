@@ -1,88 +1,84 @@
-package ru.nsu.ledcontroller.ui.custom.canvas
+package nsu.titov.ledcontroller.ui.custom.canvas
 
-import android.util.Log
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.gestures.detectTransformGestures
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.lifecycle.viewmodel.compose.viewModel
-import ru.nsu.ledcontroller.domain.model.canvas.PixelCanvas
-import kotlin.math.roundToInt
+import androidx.compose.ui.graphics.drawscope.Fill
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import nsu.titov.ledcontroller.ui.Spacing
 
 @Composable
-fun PixelCanvasView(
-    source: PixelCanvas,
+fun PixelCanvas(
+    modifier: Modifier = Modifier,
+    source: PixelCanvasUIState,
+    initialOffset: Offset = Offset.Zero,
     rectSpacing: Offset = Offset.Zero,
     rectSize: Size = Size.Zero,
     cornerRadius: CornerRadius = CornerRadius.Zero,
-    viewMode: ViewMode = ViewMode.LOCKED,
-    onPixelClicked: ((Int, Int) -> Unit)? = null,
 ) {
-    val viewModel: PixelCanvasViewModel = viewModel()
-    val uiState by viewModel.uiState.collectAsState()
+    // для программиста удобнее передать спейс между прямоугольниками, но считать проще через
+    // разность систем отсчета
+    val frameDifference = Offset(
+        x = rectSize.width + rectSpacing.x,
+        y = rectSize.height + rectSpacing.y,
+    )
 
-    Canvas(modifier = Modifier
-        .fillMaxWidth()
-        .fillMaxHeight(0.7f)
-        .pointerInput(viewMode) {
-            when (viewMode) {
-                ViewMode.LOCKED -> onPixelClicked?.let { clickedCallback ->
-                    detectTapGestures(onTap = {
-                        val tap = it - uiState.offset
-                        val targetingAreaOffsetX =
-                            (tap.x / (uiState.zoom * (rectSpacing.x + rectSize.width))).roundToInt()
-                        val targetingAreaOffsetY =
-                            (tap.y / (uiState.zoom * (rectSpacing.y + rectSize.height))).roundToInt()
-
-                        Log.d(
-                            "PixelCanvasView",
-                            "Tap detected x: $targetingAreaOffsetX, y: $targetingAreaOffsetY\n" + "Original tap x: ${it.x} y: ${it.y}"
-                        )
-                        clickedCallback(targetingAreaOffsetX, targetingAreaOffsetY)
-                    })
-                }
-                ViewMode.FREE_MOVE -> detectTransformGestures(
-                    panZoomLock = true,
-                    onGesture = viewModel::onGestureDetected,
-                )
-            }
-        }) {
-
+    Canvas(
+        modifier = modifier
+    ) {
         repeat(source.width) { x ->
             repeat(source.height) { y ->
-                drawRoundRect(
-                    color = Color(source[x, y].value),
-                    topLeft = Offset(
-                        x = uiState.offset.x + x * uiState.zoom * (rectSize.width + rectSpacing.x),
-                        y = uiState.offset.y + y * uiState.zoom * (rectSize.height + rectSpacing.y)
-                    ),
-                    size = rectSize * uiState.zoom,
-                    cornerRadius = cornerRadius * uiState.zoom,
-                )
+
+                when (val color = source[x, y]) {
+                    Color.Transparent ->
+                        drawRoundRect(
+                            color = Color.LightGray,
+                            topLeft = initialOffset + Offset(
+                                x = frameDifference.x * x,
+                                y = frameDifference.y * y
+                            ),
+                            style = Stroke(Spacing.Small.value),
+                            size = rectSize,
+                            cornerRadius = cornerRadius,
+                        )
+                    else -> {
+                        drawRoundRect(
+                            color = color,
+                            topLeft = initialOffset + Offset(
+                                x = frameDifference.x * x,
+                                y = frameDifference.y * y
+                            ),
+                            style = Fill,
+                            size = rectSize,
+                            cornerRadius = cornerRadius,
+                        )
+                    }
+                }
+
             }
         }
     }
 }
 
-//@Composable
-//@Preview
-//fun PixelCanvasPreview() {
-//    PixelCanvasView(
-//        source = PixelCanvas(16, 8, Color.Black.toDomain()),
-//        rectSpacing = Offset(20f, 20f),
-//        rectSize = Size(40f, 40f),
-//        cornerRadius = CornerRadius(8f),
-//        viewMode = ViewMode.FREE_MOVE,
-//    )
-//}
+@Composable
+@Preview
+fun PixelCanvasPreview() {
+    PixelCanvas(
+        modifier = Modifier
+            .padding(16.dp),
+        source = previewCanvas,
+        rectSpacing = Offset(8f, 8f),
+        rectSize = Size(32f, 32f),
+        cornerRadius = CornerRadius(4f, 4f)
+    )
+}
+
+private val previewCanvas = PixelCanvasUIState(16, 8, List(18 * 8) { Color.Transparent })
+
