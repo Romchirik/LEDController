@@ -4,6 +4,7 @@ import androidx.annotation.DrawableRes
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
 import nsu.titov.ledcontroller.ui.Spacing
 
 data class EditorUiState(
@@ -40,8 +41,16 @@ data class EditorUiState(
     }
 }
 
-data class ToolUIModel(
+sealed class ToolUIModel(
     @field:DrawableRes val icon: Int,
     val selected: Boolean = false,
-    val onSelect: () -> Unit,
-)
+    val onSelect: (ToolUIModel) -> Unit,
+) {
+
+    class ColorSelector(
+        icon: Int,
+        selected: Boolean = false,
+        onSelect: (ToolUIModel) -> Unit,
+        val color: Color
+    ) : ToolUIModel(icon, selected, onSelect)
+}

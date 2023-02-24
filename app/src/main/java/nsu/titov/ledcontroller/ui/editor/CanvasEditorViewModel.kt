@@ -6,6 +6,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import nsu.titov.ledcontroller.R
 import nsu.titov.ledcontroller.domain.edit.CanvasEditManager
 import nsu.titov.ledcontroller.domain.model.canvas.PixelatedCanvas
 
@@ -22,7 +23,19 @@ class CanvasEditorViewModel(
     init {
         _uiState.value = uiState.value.copy(
             canvasModifiers = uiState.value.canvasModifiers.copy(
-                canvas = PixelCanvasMapper.toUi(editor.getLast())
+                canvas = PixelCanvasMapper.toUi(editor.getLast()),
+            ),
+            tools = generateTools()
+        )
+    }
+
+    private fun generateTools(): List<ToolUIModel> {
+        return listOf(
+            ToolUIModel.ColorSelector(
+                icon = R.drawable.ic_baseline_color_lens_24,
+                selected = true,
+                onSelect = this::onToolClicked,
+                color = Color.Yellow
             )
         )
     }
@@ -57,6 +70,9 @@ class CanvasEditorViewModel(
                 )
             )
         }
+    }
+
+    private fun onToolClicked(tool: ToolUIModel) {
     }
 
     private fun onDraw(tapCoords: Offset) = uiState.value.canvasModifiers.run {
