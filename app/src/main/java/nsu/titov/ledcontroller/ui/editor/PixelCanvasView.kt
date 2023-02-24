@@ -1,4 +1,4 @@
-package nsu.titov.ledcontroller.ui.custom.canvas
+package nsu.titov.ledcontroller.ui.editor
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.padding

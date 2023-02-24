@@ -1,4 +1,4 @@
-package nsu.titov.ledcontroller.ui.custom.canvas
+package nsu.titov.ledcontroller.ui.editor
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color

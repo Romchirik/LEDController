@@ -1,4 +1,4 @@
-package nsu.titov.ledcontroller.model.canvas
+package nsu.titov.ledcontroller.domain.model.canvas
 
 import androidx.compose.ui.graphics.Color
 
@@ -21,6 +21,6 @@ data class PixelatedCanvas(
         private const val DEFAULT_WIDTH = 16
         private const val DEFAULT_HEIGHT = 8
 
-        fun getDefault() = PixelatedCanvas(DEFAULT_WIDTH, DEFAULT_HEIGHT, Color.White)
+        val Default = PixelatedCanvas(DEFAULT_WIDTH, DEFAULT_HEIGHT, Color.White)
     }
 }

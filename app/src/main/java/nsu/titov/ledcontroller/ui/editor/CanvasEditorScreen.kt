@@ -18,8 +18,6 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
-import nsu.titov.ledcontroller.ui.custom.canvas.PixelCanvas
-import nsu.titov.ledcontroller.ui.custom.canvas.PixelCanvasUIState
 
 @Composable
 @Preview
@@ -41,7 +39,7 @@ fun CanvasEditorScreen(
                 }
                 .pointerInput(Unit) {
                     detectTapGestures(
-                        onTap = viewModel::onPixelTapped
+                        onTap = viewModel::onEditAreaTapped
                     )
                 },
             source = PixelCanvasUIState.Test16x8,
@@ -57,7 +55,7 @@ fun CanvasEditorScreen(
         ) {
             items(uiState.tools) { item: ToolUIModel ->
                 FloatingActionButton(
-                    onClick = { }
+                    onClick = item.onSelect
                 ) {
                     Icon(
                         painter = painterResource(item.icon),

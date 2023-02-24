@@ -1,6 +1,6 @@
-package nsu.titov.ledcontroller.ui.custom.canvas
+package nsu.titov.ledcontroller.ui.editor
 
-import nsu.titov.ledcontroller.model.canvas.PixelatedCanvas
+import nsu.titov.ledcontroller.domain.model.canvas.PixelatedCanvas
 import nsu.titov.ledcontroller.ui.root.utils.UIMapper
 
 object PixelCanvasMapper : UIMapper<PixelatedCanvas, PixelCanvasUIState> {

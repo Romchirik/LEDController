@@ -5,16 +5,14 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import nsu.titov.ledcontroller.ui.Spacing
-import nsu.titov.ledcontroller.ui.custom.canvas.PixelCanvasUIState
 
 data class EditorUiState(
-    val canvas: PixelCanvasUIState,
-
-    val canvasModifiers: CanvasModifiers,
+    val canvasModifiers: CanvasUiState,
     val tools: List<ToolUIModel>,
 ) {
 
-    data class CanvasModifiers(
+    data class CanvasUiState(
+        val canvas: PixelCanvasUIState,
         val initialOffset: Offset,
         val rectSize: Size,
         val rectSpacing: Offset,
@@ -23,7 +21,8 @@ data class EditorUiState(
 
         companion object {
 
-            val Default = CanvasModifiers(
+            val Default = CanvasUiState(
+                canvas = PixelCanvasUIState.Test16x8,
                 initialOffset = Offset.Zero,
                 rectSize = Size(Spacing.Quad.value, Spacing.Quad.value),
                 rectSpacing = Offset(Spacing.Double.value, Spacing.Double.value),
@@ -35,8 +34,7 @@ data class EditorUiState(
     companion object {
 
         val Default = EditorUiState(
-            canvas = PixelCanvasUIState.Test16x8,
-            canvasModifiers = CanvasModifiers.Default,
+            canvasModifiers = CanvasUiState.Default,
             tools = emptyList(),
         )
     }
@@ -45,4 +43,5 @@ data class EditorUiState(
 data class ToolUIModel(
     @field:DrawableRes val icon: Int,
     val selected: Boolean = false,
+    val onSelect: () -> Unit,
 )
