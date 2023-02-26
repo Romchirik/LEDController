@@ -1,8 +1,7 @@
 package nsu.titov.ledcontroller.domain.edit
 
 import nsu.titov.ledcontroller.domain.model.canvas.PixelatedCanvas
-import java.util.Deque
-import java.util.LinkedList
+import java.util.*
 
 class CanvasEditManager(
     initialCanvas: PixelatedCanvas
@@ -21,6 +20,9 @@ class CanvasEditManager(
 
     fun getLast(): PixelatedCanvas = editHistory.last
 
+    fun undo() {
+
+    }
 
     companion object {
 
