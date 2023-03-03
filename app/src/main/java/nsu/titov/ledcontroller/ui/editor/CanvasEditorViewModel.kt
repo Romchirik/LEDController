@@ -13,6 +13,7 @@ import kotlinx.coroutines.launch
 import nsu.titov.ledcontroller.domain.edit.CanvasEditManager
 import nsu.titov.ledcontroller.domain.model.canvas.PixelatedCanvas
 import nsu.titov.ledcontroller.ui.custom.PixelCanvasUIState
+import nsu.titov.ledcontroller.ui.custom.PixelsSource
 
 class CanvasEditorViewModel(
     private val editor: CanvasEditManager = CanvasEditManager(PixelatedCanvas.Default),
@@ -63,9 +64,12 @@ class CanvasEditorViewModel(
         Log.i("Drawing", "Draw detected on: $tap")
     }
 
-    //Global actions
     fun onUndo() = viewModelScope.launch(Dispatchers.IO) {
         editor.undo()
+    }
+
+    fun onFitCanvas() {
+        //todo add screen fit
     }
 
     fun onReject() {
@@ -83,9 +87,10 @@ class CanvasEditorViewModel(
 
             _canvasUiState.value = canvasUiState.value.copy(
                 initialOffset = getCanvasInitialOffset(
-                    screenWidthPx, screenHeightPx, canvasUiState.value.getMinSizePx()
-                ), canvas = PixelCanvasMapper.toUi(editor.getLast())
-            )
+                    screenWidthPx,
+                    screenHeightPx,
+                    canvasUiState.value.getMinSizePx()),
+                canvas = PixelsSource.Test16x8)
         }
 
     private fun getCanvasInitialOffset(
