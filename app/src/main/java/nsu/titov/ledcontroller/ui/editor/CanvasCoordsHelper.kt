@@ -2,13 +2,13 @@ package nsu.titov.ledcontroller.ui.editor
 
 import androidx.compose.ui.geometry.Offset
 import nsu.titov.ledcontroller.domain.Point
-import nsu.titov.ledcontroller.ui.custom.PixelCanvasUIState
+import nsu.titov.ledcontroller.ui.custom.canvas.PixelCanvasUIS
 import kotlin.math.floor
 import kotlin.math.roundToInt
 
 object CanvasCoordsHelper {
 
-    fun toDomainCoords(uiState: PixelCanvasUIState, screenTap: Offset): Point? =
+    fun toDomainCoords(uiState: PixelCanvasUIS, screenTap: Offset): Point? =
         uiState.run {
             val tap = screenTap - initialOffset
             if (outOfBounds(uiState, tap)) return null
@@ -22,7 +22,7 @@ object CanvasCoordsHelper {
             return null
         }
 
-    private fun outOfBounds(uiState: PixelCanvasUIState, screenTap: Offset): Boolean =
+    private fun outOfBounds(uiState: PixelCanvasUIS, screenTap: Offset): Boolean =
         uiState.run {
             val boundsX = (rectSize.width + rectSpacing.x) * (canvas.width - 1) + rectSize.width
             val boundsY = (rectSize.height + rectSpacing.y) * (canvas.height - 1) + rectSize.height
@@ -30,7 +30,7 @@ object CanvasCoordsHelper {
             return !(0f < screenTap.x && screenTap.x < boundsX && 0f < screenTap.y && screenTap.y < boundsY)
         }
 
-    private fun calculateX(uiState: PixelCanvasUIState, tapX: Float): Int? = uiState.run {
+    private fun calculateX(uiState: PixelCanvasUIS, tapX: Float): Int? = uiState.run {
         val sizeX = rectSize.width + rectSpacing.x
         val xPrediction = floor(tapX / sizeX)
         val areaStart = xPrediction * sizeX
@@ -43,7 +43,7 @@ object CanvasCoordsHelper {
         return null
     }
 
-    private fun calculateY(uiState: PixelCanvasUIState, tapY: Float): Int? = uiState.run {
+    private fun calculateY(uiState: PixelCanvasUIS, tapY: Float): Int? = uiState.run {
         val sizeY = rectSize.height + rectSpacing.y
         val yPrediction = floor(tapY / sizeY)
         val areaStart = yPrediction * sizeY

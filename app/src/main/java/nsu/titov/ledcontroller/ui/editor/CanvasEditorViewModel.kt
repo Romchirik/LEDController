@@ -12,19 +12,20 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import nsu.titov.ledcontroller.domain.edit.CanvasEditManager
 import nsu.titov.ledcontroller.domain.model.canvas.PixelatedCanvas
-import nsu.titov.ledcontroller.ui.custom.PixelCanvasUIState
-import nsu.titov.ledcontroller.ui.custom.PixelsSource
+import nsu.titov.ledcontroller.domain.model.tools.ToolType
+import nsu.titov.ledcontroller.ui.custom.canvas.PixelCanvasUIS
+import nsu.titov.ledcontroller.ui.custom.canvas.PixelsSource
 
 class CanvasEditorViewModel(
     private val editor: CanvasEditManager = CanvasEditManager(PixelatedCanvas.Default),
 ) : ViewModel() {
 
-    private val _canvasUiState: MutableStateFlow<PixelCanvasUIState> =
-        MutableStateFlow(PixelCanvasUIState.Default)
+    private val _canvasUiState: MutableStateFlow<PixelCanvasUIS> =
+        MutableStateFlow(PixelCanvasUIS.Default)
     val canvasUiState = _canvasUiState.asStateFlow()
 
-    private val _toolsUiState: MutableStateFlow<ToolsUiState> =
-        MutableStateFlow(ToolsUiState.Default)
+    private val _toolsUiState: MutableStateFlow<ToolsUIS> =
+        MutableStateFlow(ToolsUIS.Default)
     val toolsUiState = _toolsUiState.asStateFlow()
 
     fun onTransform(
@@ -97,4 +98,17 @@ class CanvasEditorViewModel(
         screenWidth: Float, screenHeight: Float, canvasSize: Offset,
     ): Offset = (Offset(screenWidth, screenHeight) - canvasSize) / 2f
 
+    fun onToolClicked(toolType: ToolType) {
+        when (toolType) {
+            ToolType.ColorSelector -> {
+            }
+            else -> {
+                viewModelScope.launch(Dispatchers.IO) {
+                    _toolsUiState.value = toolsUiState.value.copy(
+                        selectedTool = toolType
+                    )
+                }
+            }
+        }
+    }
 }

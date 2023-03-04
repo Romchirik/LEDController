@@ -1,4 +1,4 @@
-package nsu.titov.ledcontroller.ui.custom
+package nsu.titov.ledcontroller.ui.custom.canvas
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.defaultMinSize
@@ -16,7 +16,7 @@ import nsu.titov.ledcontroller.ui.Spacing
 @Composable
 fun PixelCanvas(
     modifier: Modifier = Modifier,
-    source: PixelCanvasUIState,
+    source: PixelCanvasUIS,
 ) = source.run {
     // для программиста удобнее передать спейс между прямоугольниками, но считать проще через
     // разность систем отсчета
@@ -71,7 +71,7 @@ fun PixelCanvas(
 @Preview
 fun PixelCanvasPreview() {
     PixelCanvas(
-        source = PixelCanvasUIState(
+        source = PixelCanvasUIS(
             previewCanvas,
             initialOffset = Offset(0f, 0f),
             rectSpacing = Offset(8f, 8f),

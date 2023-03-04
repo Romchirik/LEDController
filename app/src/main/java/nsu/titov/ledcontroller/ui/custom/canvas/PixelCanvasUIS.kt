@@ -1,4 +1,4 @@
-package nsu.titov.ledcontroller.ui.custom
+package nsu.titov.ledcontroller.ui.custom.canvas
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.geometry.CornerRadius
@@ -10,7 +10,7 @@ import androidx.compose.ui.unit.DpOffset
 import nsu.titov.ledcontroller.ui.Spacing
 import nsu.titov.ledcontroller.ui.root.utils.UIModel
 
-data class PixelCanvasUIState(
+data class PixelCanvasUIS(
     val canvas: PixelsSource,
     val initialOffset: Offset,
     val rectSize: Size,
@@ -37,12 +37,12 @@ data class PixelCanvasUIState(
 
     companion object {
 
-        val Default = PixelCanvasUIState(
+        val Default = PixelCanvasUIS(
             canvas = PixelsSource.Test16x8,
             initialOffset = Offset.Zero,
             rectSize = Size(Spacing.Quad.value, Spacing.Quad.value),
             rectSpacing = Offset(Spacing.Double.value, Spacing.Double.value),
-            cornerRadius = CornerRadius(Spacing.Default.value),
+            cornerRadius = CornerRadius(Spacing.Single.value),
         )
     }
 }

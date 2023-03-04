@@ -1,7 +1,7 @@
 package nsu.titov.ledcontroller.ui.editor
 
 import nsu.titov.ledcontroller.domain.model.canvas.PixelatedCanvas
-import nsu.titov.ledcontroller.ui.custom.PixelsSource
+import nsu.titov.ledcontroller.ui.custom.canvas.PixelsSource
 import nsu.titov.ledcontroller.ui.root.utils.UIMapper
 
 object PixelCanvasMapper : UIMapper<PixelatedCanvas, PixelsSource> {
