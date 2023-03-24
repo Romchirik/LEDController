@@ -18,12 +18,14 @@ android {
     }
 
     buildTypes {
-        getByName("release") {
-            isMinifyEnabled = false
+        release {
+            isMinifyEnabled = true
+            isDebuggable = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
         }
+
     }
 
     compileOptions {
@@ -71,5 +73,6 @@ dependencies {
     implementation("androidx.compose.material3:material3:1.0.1")
     implementation("androidx.compose.material3:material3-window-size-class:1.0.1")
 
+    implementation("com.github.skydoves:colorpicker-compose:1.0.1")
 
 }

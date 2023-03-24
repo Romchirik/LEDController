@@ -12,7 +12,6 @@ class GraphicsEditorViewModel : ViewModel() {
     private val _displayingCanvas = MutableStateFlow(1)
     val displayingCanvas: StateFlow<Int> = _displayingCanvas
 
-
     init {
         viewModelScope.launch {
             while (true) {

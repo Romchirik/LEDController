@@ -1,10 +1,11 @@
-package nsu.titov.ledcontroller.domain.model.tools
+package nsu.titov.ledcontroller.domain.edit.tools
 
 enum class ToolType {
 
     FreeDraw,
-    DrawCircle,
+    Ellipse,
     DrawRect,
     DrawLine,
     ColorSelector,
+    Erase,
 }

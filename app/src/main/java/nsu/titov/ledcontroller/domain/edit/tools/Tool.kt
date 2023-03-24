@@ -1,11 +1,11 @@
-package nsu.titov.ledcontroller.domain.model.tools
+package nsu.titov.ledcontroller.domain.edit.tools
 
 import nsu.titov.ledcontroller.domain.model.canvas.PixelatedCanvas
 
 interface Tool : ColorChangeListener {
-    val overlay: PixelatedCanvas
 
+    var overlay: PixelatedCanvas
+    val type: ToolType
     fun consumePoint(x: Int, y: Int)
-
-    fun applyReady(): Boolean
+    fun isOverlayReady(): Boolean
 }

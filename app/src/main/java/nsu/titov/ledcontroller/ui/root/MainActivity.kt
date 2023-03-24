@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
 import nsu.titov.ledcontroller.ui.editor.FrameEditorScreen
+import nsu.titov.ledcontroller.ui.main.MainScreen
 
 class MainActivity : ComponentActivity() {
 
@@ -12,9 +13,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MaterialTheme {
-                FrameEditorScreen()
+                MainScreen()
             }
-
         }
     }
 }
