@@ -14,13 +14,19 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import nsu.titov.ledcontroller.domain.model.canvas.PixelatedCanvas
 import nsu.titov.ledcontroller.ui.Spacing
+import nsu.titov.ledcontroller.ui.custom.canvas.PixelCanvasUIS
 import nsu.titov.ledcontroller.ui.custom.canvas.PixelCanvasView
 
 @Composable
 fun EffectsScreen(viewModel: EffectsViewModel = viewModel()) {
 
-    val canvasUIState by viewModel.canvasUiState.collectAsState()
+    val canvasUIState by viewModel.canvasUiState.collectAsState(
+        PixelCanvasUIS.withPattern(
+            PixelatedCanvas.Default
+        )
+    )
 
     val size = canvasUIState.getMinSizeDp(LocalDensity.current)
 

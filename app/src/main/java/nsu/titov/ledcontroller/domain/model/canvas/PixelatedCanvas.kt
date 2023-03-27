@@ -56,6 +56,14 @@ class PixelatedCanvas(
         private const val DEFAULT_WIDTH = 16
         private const val DEFAULT_HEIGHT = 32
 
-        val Default = PixelatedCanvas(DEFAULT_WIDTH, DEFAULT_HEIGHT)
+        val Default = PixelatedCanvas(DEFAULT_WIDTH, DEFAULT_HEIGHT).apply {
+            this[4, 4] = Color.Green
+        }
+
+        fun withPattern(source: PixelatedCanvas) = PixelatedCanvas(
+            width = source.width,
+            height = source.height,
+            pixels = Array(source.height * source.width) { Color.Unspecified }
+        )
     }
 }
