@@ -46,6 +46,14 @@ data class PixelCanvasUIS(
             rectSpacing = Offset(Spacing.Double.value, Spacing.Double.value),
             cornerRadius = CornerRadius(Spacing.Single.value),
         )
+
+        val Default = PixelCanvasUIS(
+            canvas = PixelsSource(0, 0, emptyList()),
+            initialOffset = Offset.Zero,
+            rectSize = Size(Spacing.Quad.value, Spacing.Quad.value),
+            rectSpacing = Offset(Spacing.Double.value, Spacing.Double.value),
+            cornerRadius = CornerRadius(Spacing.Single.value),
+        )
     }
 }
 

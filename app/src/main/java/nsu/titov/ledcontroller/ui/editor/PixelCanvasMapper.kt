@@ -9,6 +9,6 @@ object PixelCanvasMapper : UIMapper<PixelatedCanvas, PixelsSource> {
     override fun toUi(source: PixelatedCanvas): PixelsSource = PixelsSource(
         width = source.width,
         height = source.height,
-        pixels = source.pixels.copyOf().asList()
+        pixels = source.pixels.asList(),
     )
 }

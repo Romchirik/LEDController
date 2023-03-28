@@ -2,9 +2,6 @@ package nsu.titov.ledcontroller.domain.edit.effects
 
 import androidx.compose.ui.graphics.Color
 import nsu.titov.ledcontroller.domain.model.canvas.PixelatedCanvas
-import nsu.titov.ledcontroller.domain.model.utils.hsvValue
-import nsu.titov.ledcontroller.domain.model.utils.hue
-import nsu.titov.ledcontroller.domain.model.utils.saturation
 
 class RainbowEffect(
     period: Long = 300L,
@@ -13,15 +10,22 @@ class RainbowEffect(
     private val period: Float = period.toFloat()
 
     override fun apply(canvas: PixelatedCanvas, timestamp: Long): PixelatedCanvas {
-//        val newPixels: Array<Color> = canvas.pixels.map {
-//            val hue = it.hue
-//            val value = it.hsvValue
-//            val saturation = it.saturation
-//            val alpha = it.alpha
-//            android.graphics.Color.RGBToHSV(it.)
-//
-//        }.toTypedArray()
+        val newPixels = canvas.pixels.map {
+            if(it != Color.Unspecified) {
+                val r = 255 * it.red.toInt().toByte()
+                val g = 255 * it.green.toInt().toByte()
+                val b = 255 * it.blue.toInt().toByte()
 
-        return canvas.copy()
+                val hsv = floatArrayOf(0f, 0f, 0f)
+                android.graphics.Color.RGBToHSV(r, g, b, hsv)
+
+                val shift = (timestamp % period) / period
+                Color.hsv(hsv[0], (hsv[1] + shift) % 1f, hsv[2])
+            } else {
+                it
+            }
+        }
+
+        return canvas.copy(pixels = newPixels.toTypedArray())
     }
 }

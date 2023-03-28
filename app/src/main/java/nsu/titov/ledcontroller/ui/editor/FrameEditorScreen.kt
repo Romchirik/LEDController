@@ -49,6 +49,7 @@ fun FrameEditorScreen(
 
     val config = LocalConfiguration.current
     val density = LocalDensity.current
+
     LaunchedEffect(Unit) {
         val screenWidth = config.screenWidthDp
         val screenHeight = config.screenHeightDp
