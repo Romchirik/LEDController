@@ -7,31 +7,41 @@ import nsu.titov.ledcontroller.domain.model.utils.forEachPixel
 class MoveEffect(
     private val shiftX: Int,
     private val shiftY: Int,
+    override val fireOnEvery: Int,
 ) : Effect {
 
-    private var timesApplied: Int = 0
-
-    override fun apply(canvas: PixelatedCanvas, timestamp: Long): PixelatedCanvas {
+    override fun apply(canvas: PixelatedCanvas, ticked: Int, timestamp: Long): PixelatedCanvas {
         val newCanvas =
             canvas.copy(pixels = Array(canvas.width * canvas.height) { Color.Unspecified })
         canvas.forEachPixel { x, y, color ->
-            val newX = canvas.width.fitCycled(x + shiftX * timesApplied)
-            val newY = canvas.height.fitCycled(y + shiftY * timesApplied)
+            val newX = canvas.width.fitCycled(x + shiftX * ticked / fireOnEvery)
+            val newY = canvas.height.fitCycled(y + shiftY * ticked / fireOnEvery)
 
             newCanvas[newX, newY] = color
         }
 
-        timesApplied++
         return newCanvas
     }
 
-    private fun Int.fitCycled(value: Int): Int {
+    @Suppress("NOTHING_TO_INLINE")
+    private inline fun Int.fitCycled(value: Int): Int {
         val x = value % this
 
         return if (x < 0) {
             x + this
         } else {
             x
+        }
+    }
+
+    @Suppress("NOTHING_TO_INLINE")
+    private inline fun Int.fitCycled(value: Long): Int {
+        val x = value % this
+
+        return if (x < 0) {
+            (x + this).toInt()
+        } else {
+            x.toInt()
         }
     }
 }

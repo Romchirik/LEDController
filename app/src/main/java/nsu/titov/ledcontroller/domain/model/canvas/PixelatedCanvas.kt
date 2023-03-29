@@ -53,17 +53,13 @@ class PixelatedCanvas(
 
     companion object {
 
-        private const val DEFAULT_WIDTH = 16
-        private const val DEFAULT_HEIGHT = 32
-
-        val Default = PixelatedCanvas(DEFAULT_WIDTH, DEFAULT_HEIGHT).apply {
-            this[4, 4] = Color.Green
+        val Default = PixelatedCanvas(6, 2, Array(8 * 8) { Color.Unspecified }).apply {
+            this[0, 0] = Color(255, 0, 0)
+            this[0, 1] = Color(255, 0, 0)
         }
 
-        fun withPattern(source: PixelatedCanvas) = PixelatedCanvas(
-            width = source.width,
+        fun withPattern(source: PixelatedCanvas) = PixelatedCanvas(width = source.width,
             height = source.height,
-            pixels = Array(source.height * source.width) { Color.Unspecified }
-        )
+            pixels = Array(source.height * source.width) { Color.Unspecified })
     }
 }

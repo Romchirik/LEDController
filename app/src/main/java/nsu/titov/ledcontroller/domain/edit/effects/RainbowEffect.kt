@@ -4,23 +4,27 @@ import androidx.compose.ui.graphics.Color
 import nsu.titov.ledcontroller.domain.model.canvas.PixelatedCanvas
 
 class RainbowEffect(
-    period: Long = 300L,
+    private val period: Long,
+    override val fireOnEvery: Int = 0,
 ) : Effect {
 
-    private val period: Float = period.toFloat()
+    override fun apply(canvas: PixelatedCanvas, ticked: Int, timestamp: Long): PixelatedCanvas {
 
-    override fun apply(canvas: PixelatedCanvas, timestamp: Long): PixelatedCanvas {
+        val currHueShift = (timestamp % period) * 360f / period
         val newPixels = canvas.pixels.map {
-            if(it != Color.Unspecified) {
-                val r = 255 * it.red.toInt().toByte()
-                val g = 255 * it.green.toInt().toByte()
-                val b = 255 * it.blue.toInt().toByte()
+            if (it != Color.Unspecified) {
+                val r = (255 * it.red).toInt() % 256
+                val g = (255 * it.green).toInt() % 256
+                val b = (255 * it.blue).toInt() % 256
 
                 val hsv = floatArrayOf(0f, 0f, 0f)
                 android.graphics.Color.RGBToHSV(r, g, b, hsv)
 
-                val shift = (timestamp % period) / period
-                Color.hsv(hsv[0], (hsv[1] + shift) % 1f, hsv[2])
+                Color.hsv(
+                    hue = (hsv[0] + currHueShift) % 360f,
+                    saturation = hsv[1],
+                    value = hsv[2],
+                )
             } else {
                 it
             }
