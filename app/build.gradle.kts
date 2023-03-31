@@ -75,4 +75,5 @@ dependencies {
 
     implementation("com.github.skydoves:colorpicker-compose:1.0.1")
 
+    implementation("org.burnoutcrew.composereorderable:reorderable:0.9.6")
 }

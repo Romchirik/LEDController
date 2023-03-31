@@ -6,7 +6,7 @@ import nsu.titov.ledcontroller.domain.model.canvas.PixelatedCanvas
 class RainbowEffect(
     private val period: Long,
     override val fireOnEvery: Int = 0,
-) : Effect {
+) : StatelessEffect {
 
     override fun apply(canvas: PixelatedCanvas, ticked: Int, timestamp: Long): PixelatedCanvas {
 

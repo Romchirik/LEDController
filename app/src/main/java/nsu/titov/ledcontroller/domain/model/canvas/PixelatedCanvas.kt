@@ -53,6 +53,8 @@ class PixelatedCanvas(
 
     companion object {
 
+        val Zero = PixelatedCanvas(0, 0, emptyArray())
+
         val Default = PixelatedCanvas(6, 2, Array(8 * 8) { Color.Unspecified }).apply {
             this[0, 0] = Color(255, 0, 0)
             this[0, 1] = Color(255, 0, 0)

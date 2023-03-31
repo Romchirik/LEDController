@@ -8,7 +8,7 @@ class MoveEffect(
     private val shiftX: Int,
     private val shiftY: Int,
     override val fireOnEvery: Int,
-) : Effect {
+) : StatelessEffect {
 
     override fun apply(canvas: PixelatedCanvas, ticked: Int, timestamp: Long): PixelatedCanvas {
         val newCanvas =

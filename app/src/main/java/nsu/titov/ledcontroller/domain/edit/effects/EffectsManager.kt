@@ -18,7 +18,7 @@ class EffectsManager(
     private val canvasChannel: Channel<PixelatedCanvas> = Channel()
     val canvas: Flow<PixelatedCanvas> = canvasChannel.receiveAsFlow()
 
-    private val effects: List<Effect> = listOf(MoveEffect(1, 0, 30), RainbowEffect(1000))
+    private val effects: List<StatelessEffect> = listOf(MoveEffect(1, 0, 30), RainbowEffect(1000))
     private var baseCanvas: PixelatedCanvas = PixelatedCanvas.Default
 
     private var ticked = 0

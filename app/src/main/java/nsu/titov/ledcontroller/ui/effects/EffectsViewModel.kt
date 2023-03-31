@@ -23,6 +23,12 @@ class EffectsViewModel : ViewModel() {
     private val _canvasUiState = MutableStateFlow(PixelCanvasUIS.Default)
     val canvasUiState = _canvasUiState.asStateFlow()
 
+    private val _effectsListDialogState = MutableStateFlow(PixelCanvasUIS.Default)
+    val effectsListDialogState = _effectsListDialogState.asStateFlow()
+
+    private val _addEffectDialogState = MutableStateFlow(PixelCanvasUIS.Default)
+    val addEffectDialogState = _addEffectDialogState.asStateFlow()
+
     private val _toolsUiState = MutableStateFlow(PreviewToolsUIS.Default)
     val toolsUiState = _toolsUiState.asStateFlow()
 
@@ -54,9 +60,7 @@ class EffectsViewModel : ViewModel() {
 
             _canvasUiState.value = canvasUiState.value.copy(
                 initialOffset = getCanvasInitialOffset(
-                    screenWidthPx,
-                    screenHeightPx,
-                    canvasUiState.value.getMinSizePx()
+                    screenWidthPx, screenHeightPx, canvasUiState.value.getMinSizePx()
                 )
             )
         }

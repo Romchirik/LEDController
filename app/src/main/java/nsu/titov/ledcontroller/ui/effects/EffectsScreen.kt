@@ -50,6 +50,7 @@ fun EffectsScreen(viewModel: EffectsViewModel = viewModel()) {
 
 
     Box(modifier = Modifier.fillMaxSize()) {
+
         PixelCanvasView(
             modifier = Modifier
                 .fillMaxSize()
