@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -36,7 +35,7 @@ import nsu.titov.ledcontroller.ui.custom.canvas.PixelCanvasView
 import nsu.titov.ledcontroller.ui.custom.icons.ColorSelectorIcon
 import nsu.titov.ledcontroller.ui.custom.icons.SelectableIcon
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterialApi::class)
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 @Preview
 fun FrameEditorScreen(
@@ -98,7 +97,7 @@ fun FrameEditorScreen(
                                             canceled = false
                                         }
                                     }
-                                    pointers--
+                                    if(pointers != 0) pointers--
                                 }
                                 PointerEventType.Move -> {
                                     if (pointers == 1 && !canceled) {
@@ -185,7 +184,7 @@ fun FrameEditorScreen(
                         .clickable(onClick = viewModel::onColorSelectorClicked),
                 ) {
                     ColorSelectorIcon(
-                        modifier = Modifier.padding(4.dp), color = Color.Yellow
+                        modifier = Modifier.padding(4.dp), color = toolsUiState.selectedColor
                     )
                 }
                 SelectableIcon(

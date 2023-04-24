@@ -2,14 +2,13 @@ package nsu.titov.ledcontroller.ui.editor
 
 import android.util.Log
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -19,8 +18,8 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.github.skydoves.colorpicker.compose.AlphaSlider
 import com.github.skydoves.colorpicker.compose.BrightnessSlider
+import com.github.skydoves.colorpicker.compose.ColorPickerController
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
-import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 
 @Composable
 fun ColorSelectorDialog(
@@ -29,7 +28,9 @@ fun ColorSelectorDialog(
     initialColor: Color? = null,
     properties: DialogProperties = DialogProperties(),
 ) {
-    val controller = rememberColorPickerController()
+    val controller = remember(Unit) {
+        ColorPickerController()
+    }
 
     LaunchedEffect(initialColor) {
         if (initialColor == null) return@LaunchedEffect

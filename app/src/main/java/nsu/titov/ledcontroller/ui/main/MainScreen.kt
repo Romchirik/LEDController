@@ -8,5 +8,5 @@ import nsu.titov.ledcontroller.ui.effects.EffectsScreen
 @Composable
 @Preview
 fun MainScreen() {
-    EffectsScreen()
+    FrameEditorScreen()
 }

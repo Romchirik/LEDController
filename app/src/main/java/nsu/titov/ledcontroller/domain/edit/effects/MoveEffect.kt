@@ -2,6 +2,7 @@ package nsu.titov.ledcontroller.domain.edit.effects
 
 import androidx.compose.ui.graphics.Color
 import nsu.titov.ledcontroller.domain.model.canvas.PixelatedCanvas
+import nsu.titov.ledcontroller.domain.model.utils.fitCycled
 import nsu.titov.ledcontroller.domain.model.utils.forEachPixel
 
 class MoveEffect(
@@ -21,27 +22,5 @@ class MoveEffect(
         }
 
         return newCanvas
-    }
-
-    @Suppress("NOTHING_TO_INLINE")
-    private inline fun Int.fitCycled(value: Int): Int {
-        val x = value % this
-
-        return if (x < 0) {
-            x + this
-        } else {
-            x
-        }
-    }
-
-    @Suppress("NOTHING_TO_INLINE")
-    private inline fun Int.fitCycled(value: Long): Int {
-        val x = value % this
-
-        return if (x < 0) {
-            (x + this).toInt()
-        } else {
-            x.toInt()
-        }
     }
 }

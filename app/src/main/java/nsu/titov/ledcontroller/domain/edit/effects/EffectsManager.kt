@@ -18,15 +18,21 @@ class EffectsManager(
     private val canvasChannel: Channel<PixelatedCanvas> = Channel()
     val canvas: Flow<PixelatedCanvas> = canvasChannel.receiveAsFlow()
 
-    private val effects: List<StatelessEffect> = listOf(MoveEffect(1, 0, 30), RainbowEffect(1000))
+    private val effects: List<StatelessEffect> = listOf(TextEffect("Hello world!   "), RainbowEffect(1000L))
     private var baseCanvas: PixelatedCanvas = PixelatedCanvas.Default
 
     private var ticked = 0
     private var ticker: Ticker = PeriodTicker(TickDelay)
 
+    private var nextFrame = baseCanvas
+
     init {
         managerScope.launch {
-            canvasChannel.send(baseCanvas)
+            var canvas: PixelatedCanvas = baseCanvas
+            for (effect in effects) {
+                canvas = effect.apply(canvas, 0, 0)
+            }
+            canvasChannel.send(canvas)
         }
         managerScope.launch {
             ticker.value.collect(::onNextTick)
@@ -43,7 +49,11 @@ class EffectsManager(
     }
 
     private suspend fun emitNextFrame(idx: Int, timestamp: Long) {
+        if (nextFrame !== baseCanvas) {
+            canvasChannel.send(nextFrame)
+        }
         var canvas: PixelatedCanvas = baseCanvas
+
         measureTimeMillis {
             for (effect in effects) {
                 canvas = effect.apply(canvas, idx, timestamp)
@@ -51,9 +61,7 @@ class EffectsManager(
         }.let {
             Log.d("Update", "Calculations took $it ms")
         }
-        if (canvas !== baseCanvas) {
-            canvasChannel.send(canvas)
-        }
+        nextFrame = canvas
     }
 
     fun stopPreview() = ticker.run {
@@ -67,6 +75,6 @@ class EffectsManager(
 
     companion object {
 
-        const val TickDelay = 16L
+        const val TickDelay = 33L
     }
 }

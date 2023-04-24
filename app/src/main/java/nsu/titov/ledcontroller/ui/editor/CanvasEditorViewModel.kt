@@ -1,5 +1,6 @@
 package nsu.titov.ledcontroller.ui.editor
 
+import android.util.Log
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Density
@@ -16,6 +17,7 @@ import nsu.titov.ledcontroller.domain.edit.tools.ColorChangeListener
 import nsu.titov.ledcontroller.domain.edit.tools.ColorSelector
 import nsu.titov.ledcontroller.domain.edit.tools.ToolType
 import nsu.titov.ledcontroller.domain.model.canvas.PixelatedCanvas
+import nsu.titov.ledcontroller.domain.model.utils.forEachPixel
 import nsu.titov.ledcontroller.ui.custom.canvas.PixelCanvasUIS
 import nsu.titov.ledcontroller.ui.utils.update
 
@@ -30,10 +32,9 @@ class CanvasEditorViewModel(
 
     private val _colorSelectionOpened: MutableStateFlow<ColorSelectorUiState> =
         MutableStateFlow(ColorSelectorUiState.Default)
-    val colorSelectionOpened = _colorSelectionOpened.asStateFlow()
+    val  colorSelectionOpened = _colorSelectionOpened.asStateFlow()
 
-    private val _toolsUiState: MutableStateFlow<ToolsUIS> =
-        MutableStateFlow(ToolsUIS.Default)
+    private val _toolsUiState: MutableStateFlow<ToolsUIS> = MutableStateFlow(ToolsUIS.Default)
     val toolsUiState = _toolsUiState.asStateFlow()
 
     init {
@@ -42,7 +43,7 @@ class CanvasEditorViewModel(
 
     fun onTransform(
         centroid: Offset, pan: Offset, zoom: Float, rotation: Float,
-    ) = viewModelScope.launch(Dispatchers.IO) {
+    ) {
         if (rotation != 0f || zoom != 1f) {
             onTransformMultitouch(centroid, pan, zoom)
         }
@@ -59,34 +60,31 @@ class CanvasEditorViewModel(
         _colorSelectionOpened.update { ColorSelectorUiState.Shown(colorTool.currentColor) }
 
     fun onEditAreaFastSwipe(historicalPoints: List<Offset>) =
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                for (point in historicalPoints) {
-                    CanvasCoordsHelper.toDomainCoords(canvasUiState.value, point)?.let { tap ->
-                        editor.consumePoint(tap.x, tap.y)
-                    }
+        viewModelScope.launch(Dispatchers.IO) {
+            for (point in historicalPoints) {
+                CanvasCoordsHelper.toDomainCoords(canvasUiState.value, point)?.let { tap ->
+                    editor.consumePoint(tap.x, tap.y)
                 }
             }
             pushNewCanvasIfNecessary(editor.getLast())
         }
 
-    private suspend fun onTransformMultitouch(centroid: Offset, pan: Offset, zoom: Float) =
-        withContext(Dispatchers.IO) {
-            if (zoom != 0f || pan != Offset.Zero) {
-                val newInitialOffset =
-                    pan + (canvasUiState.value.initialOffset - centroid) * zoom + centroid
-                val newRectSize = canvasUiState.value.rectSize * zoom
-                val newRectOffset = canvasUiState.value.rectSpacing * zoom
-                val newCornerRadius = canvasUiState.value.cornerRadius * zoom
+    private fun onTransformMultitouch(centroid: Offset, pan: Offset, zoom: Float) {
+        if (zoom != 0f || pan != Offset.Zero) {
+            val newInitialOffset =
+                pan + (canvasUiState.value.initialOffset - centroid) * zoom + centroid
+            val newRectSize = canvasUiState.value.rectSize * zoom
+            val newRectOffset = canvasUiState.value.rectSpacing * zoom
+            val newCornerRadius = canvasUiState.value.cornerRadius * zoom
 
-                _canvasUiState.value = _canvasUiState.value.copy(
-                    initialOffset = newInitialOffset,
-                    rectSize = newRectSize,
-                    rectSpacing = newRectOffset,
-                    cornerRadius = newCornerRadius,
-                )
-            }
+            _canvasUiState.value = _canvasUiState.value.copy(
+                initialOffset = newInitialOffset,
+                rectSize = newRectSize,
+                rectSpacing = newRectOffset,
+                cornerRadius = newCornerRadius,
+            )
         }
+    }
 
     private suspend fun onDraw(tapCoords: Offset) = withContext(Dispatchers.IO) {
         CanvasCoordsHelper.toDomainCoords(canvasUiState.value, tapCoords)?.let { tap ->
@@ -122,11 +120,20 @@ class CanvasEditorViewModel(
     }
 
     fun onReject() {
-        //todo close screen
+        while (editor.isUndoAvailable()) {
+            editor.undo()
+        }
+        pushNewCanvasIfNecessary(editor.getLast())
+        pushToolsState()
     }
 
     fun onApply() {
-        //todo apply tool
+        Log.d("Code", "==========================")
+        editor.getLast().forEachPixel { x, y, color ->
+            if (color != Color.Unspecified) {
+                Log.d("Code", "this[$x, $y] = Color.Black")
+            }
+        }
     }
 
     fun calculateInitialOffset(screenWidth: Int, screenHeight: Int, density: Density) =
@@ -136,9 +143,7 @@ class CanvasEditorViewModel(
 
             _canvasUiState.value = canvasUiState.value.copy(
                 initialOffset = getCanvasInitialOffset(
-                    screenWidthPx,
-                    screenHeightPx,
-                    canvasUiState.value.getMinSizePx()
+                    screenWidthPx, screenHeightPx, canvasUiState.value.getMinSizePx()
                 )
             )
         }
@@ -160,9 +165,9 @@ class CanvasEditorViewModel(
     }
 
     private fun pushNewCanvasIfNecessary(canvas: PixelatedCanvas) {
-        //todo optimize this
+        val tmp = PixelCanvasMapper.toUi(canvas)
         _canvasUiState.value = canvasUiState.value.copy(
-            canvas = PixelCanvasMapper.toUi(canvas)
+            canvas = tmp
         )
     }
 

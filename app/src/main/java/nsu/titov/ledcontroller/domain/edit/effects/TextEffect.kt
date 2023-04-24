@@ -1,17 +1,56 @@
 package nsu.titov.ledcontroller.domain.edit.effects
 
-import android.graphics.text.PositionedGlyphs
-import androidx.compose.material.Text
 import nsu.titov.ledcontroller.domain.model.canvas.PixelatedCanvas
+import nsu.titov.ledcontroller.domain.model.utils.forEachPixel
+import nsu.titov.ledcontroller.domain.model.utils.subCanvas
 
 class TextEffect(
-    override val fireOnEvery: Int,
+    string: String,
+    override val fireOnEvery: Int = 3,
+    private val offsetY: Int = 1,
+    private val font: PixelatedFont = PracticalFont(),
 ) : StatelessEffect {
 
+    private val text =
+        string.map { font.getSymbol(it) }.rightMerge(separator = PixelatedCanvas.withSize(1, 7))
 
     override fun apply(canvas: PixelatedCanvas, ticked: Int, timestamp: Long): PixelatedCanvas {
 
+        val result = canvas.copy()
+        val symbolOffsetX = ticked / fireOnEvery
+        val cutout = text.subCanvas(symbolOffsetX, 0, canvas.width + symbolOffsetX)
 
-        return canvas
+        return result.overlay(cutout, 0, offsetY)
     }
+}
+private fun List<PixelatedCanvas>.rightMerge(separator: PixelatedCanvas = PixelatedCanvas.Zero): PixelatedCanvas {
+    assert(this.map { it.height }.toHashSet().size == 1)
+    assert(separator == PixelatedCanvas.Zero || separator.height == this.first().height)
+
+    if (this.isEmpty()) return PixelatedCanvas.Zero
+
+    val width = sumOf { it.width + separator.width } - separator.width
+
+    val result = PixelatedCanvas.withSize(height = first().height, width = width)
+
+    var offsetX = 0
+    for ((index, item) in this.withIndex()) {
+        item.forEachPixel { x, y, color ->
+            result[x + offsetX, y] = color
+        }
+        offsetX += item.width
+
+        if (index != this.size - 1 && separator != PixelatedCanvas.Zero) {
+            separator.forEachPixel { x, y, color ->
+                result[x + offsetX, y] = color
+            }
+            offsetX += separator.width
+        }
+    }
+
+    return result
+}
+
+private fun PixelatedCanvas.overlay(cutout: PixelatedCanvas, i: Int, offsetY: Int): PixelatedCanvas {
+    TODO("Not yet implemented")
 }

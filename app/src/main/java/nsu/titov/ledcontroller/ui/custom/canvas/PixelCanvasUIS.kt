@@ -43,8 +43,8 @@ data class PixelCanvasUIS(
             canvas = PixelCanvasMapper.toUi(canvas),
             initialOffset = Offset.Zero,
             rectSize = Size(Spacing.Quad.value, Spacing.Quad.value),
-            rectSpacing = Offset(Spacing.Double.value, Spacing.Double.value),
-            cornerRadius = CornerRadius(Spacing.Single.value),
+            rectSpacing = Offset.Zero,
+            cornerRadius = CornerRadius.Zero,
         )
 
         val Default = PixelCanvasUIS(
@@ -58,7 +58,7 @@ data class PixelCanvasUIS(
 }
 
 @Immutable
-data class PixelsSource(
+class PixelsSource(
     val width: Int,
     val height: Int,
     val pixels: List<Color>,

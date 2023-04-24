@@ -63,5 +63,9 @@ class PixelatedCanvas(
         fun withPattern(source: PixelatedCanvas) = PixelatedCanvas(width = source.width,
             height = source.height,
             pixels = Array(source.height * source.width) { Color.Unspecified })
+
+        fun withSize(width: Int, height: Int) = PixelatedCanvas(
+            width, height
+        )
     }
 }

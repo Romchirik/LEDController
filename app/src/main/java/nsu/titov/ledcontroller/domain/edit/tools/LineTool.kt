@@ -1,6 +1,5 @@
 package nsu.titov.ledcontroller.domain.edit.tools
 
-import android.util.Log
 import androidx.compose.ui.graphics.Color
 import nsu.titov.ledcontroller.domain.Point
 import nsu.titov.ledcontroller.domain.model.canvas.PixelatedCanvas
@@ -40,7 +39,6 @@ class LineTool(
         val dx = end.x - start.x
         val dy = end.y - start.y
 
-        Log.i("Diff", "dx: $dx, dy: $dy")
         if (abs(dx) >= abs(dy)) {
             if (dx == 0) {
                 overlay[start.x, start.y] = selectedColor

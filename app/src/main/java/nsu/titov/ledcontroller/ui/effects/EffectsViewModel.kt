@@ -1,5 +1,6 @@
 package nsu.titov.ledcontroller.ui.effects
 
+import android.text.BoringLayout
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
@@ -14,6 +15,7 @@ import kotlinx.coroutines.withContext
 import nsu.titov.ledcontroller.domain.edit.effects.EffectsManager
 import nsu.titov.ledcontroller.domain.model.canvas.PixelatedCanvas
 import nsu.titov.ledcontroller.ui.custom.canvas.PixelCanvasUIS
+import nsu.titov.ledcontroller.ui.editor.ColorSelectorUiState
 import nsu.titov.ledcontroller.ui.editor.PixelCanvasMapper
 
 class EffectsViewModel : ViewModel() {
@@ -22,6 +24,11 @@ class EffectsViewModel : ViewModel() {
 
     private val _canvasUiState = MutableStateFlow(PixelCanvasUIS.Default)
     val canvasUiState = _canvasUiState.asStateFlow()
+
+    private val _effectsEditorOpened: MutableStateFlow<Boolean> =
+        MutableStateFlow(false)
+    val  effectsEditorOpened = _effectsEditorOpened.asStateFlow()
+
 
     private val _effectsListDialogState = MutableStateFlow(PixelCanvasUIS.Default)
     val effectsListDialogState = _effectsListDialogState.asStateFlow()
