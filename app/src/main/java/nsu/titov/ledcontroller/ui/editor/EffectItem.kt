@@ -13,7 +13,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import nsu.titov.ledcontroller.R
 import nsu.titov.ledcontroller.ui.Spacing
 
@@ -26,7 +28,7 @@ fun EffectItem(effect: EffectVM) {
     ) {
         Column(Modifier.fillMaxWidth(0.9f)) {
             Text(text = effect.name)
-            Text(text = effect.additionalInfo)
+            Text(text = effect.additionalInfo, fontSize = 10.sp, color = Color(0xFF222222))
         }
         Icon(
             painter = painterResource(id = R.drawable.baseline_drag_handle_24),

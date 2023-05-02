@@ -6,6 +6,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import nsu.titov.ledcontroller.ui.editor.EffectItem
+import nsu.titov.ledcontroller.ui.editor.EffectVM
 
 @Composable
 fun EffectsEditDialog(
@@ -18,14 +20,19 @@ fun EffectsEditDialog(
     ) {
         Card {
             LazyColumn {
-               item {
-
-               }
+                item {
+                    EffectItem(effect = EffectVM.Text())
+                }
+                item {
+                    EffectItem(effect = EffectVM.Rainbow())
+                }
+                item {
+                    EffectItem(effect = EffectVM.Sin())
+                }
             }
         }
     }
 }
-
 
 @Preview
 @Composable

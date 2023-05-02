@@ -1,0 +1,68 @@
+syntax = "proto2";
+
+message AnimatedLayer{
+  required PixelatedCanvas base_frame = 1;
+  required int64 duration = 2;
+  optional TextEffect text_effect = 3;
+  optional FadeInEffect fade_in_effect = 4;
+  optional FadeOutEffect fade_out_effect = 5;
+  optional BlinkSinEffect blink_sin_effect = 6;
+  optional BlinkSawEffect blink_saw_effect = 7;
+  optional MoveEffect move_effect = 8;
+  optional RainbowEffect rainbow_effect = 9;
+}
+
+message PixelatedCanvas {
+  required int32 width = 1;
+  required int32 height = 2;
+  required bytes image = 3;
+}
+
+message TextEffect {
+  required int32 start_offset_x = 1;
+  required int32 start_offset_y = 2;
+  required int64 color = 3;
+  required  int32 height = 4;
+  required string text = 5;
+  required int32 ordinal = 6;
+}
+
+message FadeInEffect {
+  required int32 fade_to_brightness = 1;
+  required int32 fade_from_brightness = 2;
+  required int32 fade_duration = 3;
+  required int32 ordinal = 4;
+}
+
+message FadeOutEffect {
+  required int32 fade_to_brightness = 1;
+  required int32 fade_from_brightness = 2;
+  required int32 fade_duration = 3;
+  required int32 ordinal = 4;
+}
+
+message BlinkSinEffect {
+  required int32 fade_to_brightness = 1;
+  required int32 fade_from_brightness = 2;
+  required int32 period = 3;
+  required int32 ordinal = 4;
+}
+
+message BlinkSawEffect {
+  required int32 fade_to_brightness = 1;
+  required int32 fade_from_brightness = 2;
+  required int32 period = 3;
+  required int32 ordinal = 4;
+}
+
+message MoveEffect {
+  required float shift_per_tick_x = 1;
+  required float shift_per_tick_y = 2;
+  required bool cycled = 3;
+  required int32 ordinal = 4;
+}
+
+message RainbowEffect {
+  required int32 duration = 1;
+  required int32 ordinal = 2;
+}

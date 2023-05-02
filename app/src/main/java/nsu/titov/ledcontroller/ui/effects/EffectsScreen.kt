@@ -6,31 +6,41 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import nsu.titov.ledcontroller.R
+import nsu.titov.ledcontroller.data.repository.LedPanelRepositoryImpl
 import nsu.titov.ledcontroller.domain.model.canvas.PixelatedCanvas
 import nsu.titov.ledcontroller.ui.Spacing
 import nsu.titov.ledcontroller.ui.custom.canvas.PixelCanvasUIS
 import nsu.titov.ledcontroller.ui.custom.canvas.PixelCanvasView
 
 @Composable
-fun EffectsScreen(viewModel: EffectsViewModel = viewModel()) {
+fun EffectsScreen() {
+    val context = LocalContext.current
+    val viewModel = viewModel {
+        EffectsViewModel(LedPanelRepositoryImpl(context))
+    }
 
+    val colorSelectionUiState by viewModel.effectsEditorOpened.collectAsState()
     val toolsUiState by viewModel.toolsUiState.collectAsState()
     val canvasUIState by viewModel.canvasUiState.collectAsState(
         PixelCanvasUIS.withPattern(
@@ -48,6 +58,11 @@ fun EffectsScreen(viewModel: EffectsViewModel = viewModel()) {
         viewModel.calculateInitialOffset(screenWidth, screenHeight, density)
     }
 
+    if (colorSelectionUiState) {
+        EffectsEditDialog(
+            onDismissRequest = viewModel::onCloseEffects,
+        )
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
 
@@ -62,6 +77,19 @@ fun EffectsScreen(viewModel: EffectsViewModel = viewModel()) {
                 },
             source = canvasUIState,
         )
+
+        IconButton(
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(Spacing.Double)
+                .size(Spacing.Triple),
+            onClick = viewModel::onApply,
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_baseline_check_24),
+                contentDescription = "",
+            )
+        }
 
         Surface(
             modifier = Modifier

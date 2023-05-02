@@ -1,4 +1,7 @@
+import com.google.protobuf.gradle.*
+
 plugins {
+    id("com.google.protobuf")
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
 }
@@ -44,9 +47,14 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = "1.4.2"
     }
+
 }
 
 dependencies {
+
+    implementation("com.google.protobuf:protobuf-java:3.21.12")
+    implementation("com.google.protobuf:protobuf-kotlin:3.21.12")
+
 
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
@@ -76,4 +84,20 @@ dependencies {
     implementation("com.github.skydoves:colorpicker-compose:1.0.1")
 
     implementation("org.burnoutcrew.composereorderable:reorderable:0.9.6")
+    implementation("androidx.navigation:navigation-compose:2.5.3")
+
+}
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.21.2"
+    }
+    generateProtoTasks {
+        all().forEach { task ->
+            task.plugins{
+                create("kotlin")
+                create("java")
+            }
+        }
+    }
 }

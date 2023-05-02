@@ -6,8 +6,8 @@ import nsu.titov.ledcontroller.domain.model.utils.fitCycled
 import nsu.titov.ledcontroller.domain.model.utils.forEachPixel
 
 class MoveEffect(
-    private val shiftX: Int,
-    private val shiftY: Int,
+    val shiftX: Int,
+    val shiftY: Int,
     override val fireOnEvery: Int,
 ) : StatelessEffect {
 

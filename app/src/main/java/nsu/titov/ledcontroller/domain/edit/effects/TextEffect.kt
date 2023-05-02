@@ -1,28 +1,30 @@
 package nsu.titov.ledcontroller.domain.edit.effects
 
+import androidx.compose.ui.graphics.Color
 import nsu.titov.ledcontroller.domain.model.canvas.PixelatedCanvas
 import nsu.titov.ledcontroller.domain.model.utils.forEachPixel
 import nsu.titov.ledcontroller.domain.model.utils.subCanvas
 
 class TextEffect(
-    string: String,
+    val text: String,
     override val fireOnEvery: Int = 3,
-    private val offsetY: Int = 1,
-    private val font: PixelatedFont = PracticalFont(),
+    val offsetY: Int = 1,
+    val font: PixelatedFont = PracticalFont(),
 ) : StatelessEffect {
 
-    private val text =
-        string.map { font.getSymbol(it) }.rightMerge(separator = PixelatedCanvas.withSize(1, 7))
+    private val pixelText =
+        text.map { font.getSymbol(it) }.rightMerge(separator = PixelatedCanvas.withSize(1, 7))
 
     override fun apply(canvas: PixelatedCanvas, ticked: Int, timestamp: Long): PixelatedCanvas {
 
         val result = canvas.copy()
         val symbolOffsetX = ticked / fireOnEvery
-        val cutout = text.subCanvas(symbolOffsetX, 0, canvas.width + symbolOffsetX)
+        val cutout = pixelText.subCanvas(symbolOffsetX, 0, canvas.width + symbolOffsetX)
 
-        return result.overlay(cutout, 0, offsetY)
+        return result.overlayText(cutout, 0, offsetY)
     }
 }
+
 private fun List<PixelatedCanvas>.rightMerge(separator: PixelatedCanvas = PixelatedCanvas.Zero): PixelatedCanvas {
     assert(this.map { it.height }.toHashSet().size == 1)
     assert(separator == PixelatedCanvas.Zero || separator.height == this.first().height)
@@ -51,6 +53,15 @@ private fun List<PixelatedCanvas>.rightMerge(separator: PixelatedCanvas = Pixela
     return result
 }
 
-private fun PixelatedCanvas.overlay(cutout: PixelatedCanvas, i: Int, offsetY: Int): PixelatedCanvas {
-    TODO("Not yet implemented")
+private fun PixelatedCanvas.overlayText(
+    cutout: PixelatedCanvas,
+    offsetX: Int,
+    offsetY: Int,
+): PixelatedCanvas {
+    cutout.forEachPixel { x, y, color ->
+        if (color != Color.Unspecified) {
+            this[x + offsetX, y + offsetY] = color
+        }
+    }
+    return this
 }

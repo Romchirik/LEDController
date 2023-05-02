@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import nsu.titov.ledcontroller.domain.model.canvas.PixelatedCanvas
+import nsu.titov.ledcontroller.domain.model.layer.PixelatedLayer
 import kotlin.system.measureTimeMillis
 
 class EffectsManager(
@@ -18,7 +19,7 @@ class EffectsManager(
     private val canvasChannel: Channel<PixelatedCanvas> = Channel()
     val canvas: Flow<PixelatedCanvas> = canvasChannel.receiveAsFlow()
 
-    private val effects: List<StatelessEffect> = listOf(TextEffect("Hello world!   "), RainbowEffect(1000L))
+    private val effects: List<StatelessEffect> = listOf(RainbowEffect(1000L))
     private var baseCanvas: PixelatedCanvas = PixelatedCanvas.Default
 
     private var ticked = 0
@@ -72,6 +73,11 @@ class EffectsManager(
             canvasChannel.send(baseCanvas)
         }
     }
+
+    fun getResult(): PixelatedLayer = PixelatedLayer(
+        canvas = baseCanvas,
+        effects = effects,
+    )
 
     companion object {
 

@@ -30,7 +30,11 @@ class PixelatedCanvas(
 
     operator fun get(x: Int, y: Int) = pixels[width * y + x]
 
-    operator fun set(x: Int, y: Int, item: Color) = pixels.set(width * y + x, item)
+    operator fun set(x: Int, y: Int, item: Color) {
+        if(fit(x, y)) {
+            pixels[width * y + x] = item
+        }
+    }
 
     operator fun iterator(): Iterator<Color> = pixels.iterator()
 
@@ -55,9 +59,7 @@ class PixelatedCanvas(
 
         val Zero = PixelatedCanvas(0, 0, emptyArray())
 
-        val Default = PixelatedCanvas(6, 2, Array(8 * 8) { Color.Unspecified }).apply {
-            this[0, 0] = Color(255, 0, 0)
-            this[0, 1] = Color(255, 0, 0)
+        val Default = PixelatedCanvas(10, 4, Array(40) { Color.Red }).apply {
         }
 
         fun withPattern(source: PixelatedCanvas) = PixelatedCanvas(width = source.width,

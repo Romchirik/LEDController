@@ -7,5 +7,4 @@ import java.time.Duration
 class PixelatedLayer(
     val canvas: PixelatedCanvas,
     val effects: List<StatelessEffect> = emptyList(),
-    var duration: Long = 0L,
 )

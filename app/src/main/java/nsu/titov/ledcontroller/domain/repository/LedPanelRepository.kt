@@ -1,10 +1,11 @@
 package nsu.titov.ledcontroller.domain.repository
 
+import nsu.titov.ledcontroller.domain.model.layer.PixelatedLayer
 import nsu.titov.ledcontroller.domain.model.scene.PixelatedScene
 
 interface LedPanelRepository {
 
-    suspend fun saveAnimation(source: PixelatedScene): Result<Unit>
+    suspend fun saveAnimation(source: PixelatedLayer): Result<Unit>
 
     suspend fun getSavedAnimation(): Result<PixelatedScene>
 

@@ -4,7 +4,7 @@ import androidx.compose.ui.graphics.Color
 import nsu.titov.ledcontroller.domain.model.canvas.PixelatedCanvas
 
 class RainbowEffect(
-    private val period: Long,
+    val period: Long,
     override val fireOnEvery: Int = 0,
 ) : StatelessEffect {
 
