@@ -43,16 +43,16 @@ data class PixelCanvasUIS(
             canvas = PixelCanvasMapper.toUi(canvas),
             initialOffset = Offset.Zero,
             rectSize = Size(Spacing.Quad.value, Spacing.Quad.value),
-            rectSpacing = Offset.Zero,
-            cornerRadius = CornerRadius.Zero,
+            rectSpacing = Offset(4f, 4f),
+            cornerRadius = CornerRadius(8f, 8f),
         )
 
         val Default = PixelCanvasUIS(
             canvas = PixelsSource(0, 0, emptyList()),
             initialOffset = Offset.Zero,
             rectSize = Size(Spacing.Quad.value, Spacing.Quad.value),
-            rectSpacing = Offset(Spacing.Double.value, Spacing.Double.value),
-            cornerRadius = CornerRadius(Spacing.Single.value),
+            rectSpacing = Offset(4f, 4f),
+            cornerRadius = CornerRadius(8f, 8f),
         )
     }
 }

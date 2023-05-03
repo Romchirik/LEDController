@@ -10,17 +10,15 @@ import androidx.annotation.ColorInt
 import androidx.annotation.RequiresApi
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
-import androidx.core.graphics.alpha
-import androidx.core.graphics.blue
 import androidx.core.graphics.component1
 import androidx.core.graphics.component2
 import androidx.core.graphics.component3
 import androidx.core.graphics.component4
-import androidx.core.graphics.green
-import androidx.core.graphics.red
 import animatedLayer
+import blinkSawEffect
 import com.google.protobuf.ByteString
 import moveEffect
+import nsu.titov.ledcontroller.domain.edit.effects.BlinkSawEffect
 import nsu.titov.ledcontroller.domain.edit.effects.MoveEffect
 import nsu.titov.ledcontroller.domain.edit.effects.RainbowEffect
 import nsu.titov.ledcontroller.domain.edit.effects.TextEffect
@@ -32,7 +30,6 @@ import rainbowEffect
 import textEffect
 
 import java.nio.ByteBuffer
-import kotlin.experimental.or
 
 class LedPanelRepositoryImpl(
     private val context: Context,
@@ -46,7 +43,7 @@ class LedPanelRepositoryImpl(
                 width = source.canvas.width
                 height = source.canvas.height
 
-                image = source.canvas.pixels.asByteString()
+                image = source.canvas.pixels.getWith32BitDepth()
             }
 
             source.effects.forEachIndexed { idx, effect ->
@@ -68,6 +65,15 @@ class LedPanelRepositoryImpl(
                         textEffect = textEffect {
                             text = effect.text
                             ordinal = idx
+                        }
+                    }
+                    is BlinkSawEffect -> {
+                        blinkSawEffect = blinkSawEffect {
+                            fadeFromBrightness = effect.fadeFrom.toInt()
+                            fadeToBrightness = effect.fadeTo.toInt()
+                            period = effect.period.toInt()
+                            ordinal = idx
+
                         }
                     }
                 }
@@ -108,7 +114,15 @@ class LedPanelRepositoryImpl(
         }
     }
 
-    private fun Array<Color>.asByteString(): ByteString {
+    private fun Array<Color>.getWith32BitDepth(): ByteString {
+        val expectedLength = this.size * Byte.SIZE_BYTES
+        val buffer = ByteBuffer.allocate(expectedLength)
+        buffer.asIntBuffer().put(this.map(Color::toArgb).toIntArray())
+
+        return ByteString.copyFrom(buffer.array())
+    }
+
+    private fun Array<Color>.getWith8BitDepth(): ByteString {
         val expectedLength = this.size * Byte.SIZE_BYTES
         val buffer = ByteBuffer.allocate(expectedLength)
         buffer.put(this.map(Color::toArgb).map(::to8bitColor).toByteArray())

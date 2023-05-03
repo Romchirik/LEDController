@@ -1,6 +1,5 @@
 package nsu.titov.ledcontroller.ui.editor
 
-import android.util.Log
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Density
@@ -17,14 +16,20 @@ import nsu.titov.ledcontroller.domain.edit.tools.ColorChangeListener
 import nsu.titov.ledcontroller.domain.edit.tools.ColorSelector
 import nsu.titov.ledcontroller.domain.edit.tools.ToolType
 import nsu.titov.ledcontroller.domain.model.canvas.PixelatedCanvas
-import nsu.titov.ledcontroller.domain.model.utils.forEachPixel
+import nsu.titov.ledcontroller.domain.model.layer.PixelatedLayer
+import nsu.titov.ledcontroller.domain.model.project.Project
+import nsu.titov.ledcontroller.domain.repository.ProjectsRepository
 import nsu.titov.ledcontroller.ui.custom.canvas.PixelCanvasUIS
 import nsu.titov.ledcontroller.ui.utils.update
 
 class CanvasEditorViewModel(
+    val projectId: Int = 0,
+    private val projectsRepository: ProjectsRepository,
     private val colorTool: ColorSelector = ColorSelector(),
-    private val editor: CanvasEditManager = CanvasEditManager(PixelatedCanvas.Default),
 ) : ViewModel(), ColorChangeListener {
+
+    private val editor: CanvasEditManager =
+        CanvasEditManager(projectsRepository.getProject(projectId).layer.canvas)
 
     private val _canvasUiState: MutableStateFlow<PixelCanvasUIS> =
         MutableStateFlow(PixelCanvasUIS.withPattern(editor.getLast()))
@@ -32,7 +37,7 @@ class CanvasEditorViewModel(
 
     private val _colorSelectionOpened: MutableStateFlow<ColorSelectorUiState> =
         MutableStateFlow(ColorSelectorUiState.Default)
-    val  colorSelectionOpened = _colorSelectionOpened.asStateFlow()
+    val colorSelectionOpened = _colorSelectionOpened.asStateFlow()
 
     private val _toolsUiState: MutableStateFlow<ToolsUIS> = MutableStateFlow(ToolsUIS.Default)
     val toolsUiState = _toolsUiState.asStateFlow()
@@ -115,25 +120,12 @@ class CanvasEditorViewModel(
         pushToolsState()
     }
 
-    fun onFitCanvas() {
-        //todo add screen fit
-    }
-
     fun onReject() {
         while (editor.isUndoAvailable()) {
             editor.undo()
         }
         pushNewCanvasIfNecessary(editor.getLast())
         pushToolsState()
-    }
-
-    fun onApply() {
-        Log.d("Code", "==========================")
-        editor.getLast().forEachPixel { x, y, color ->
-            if (color != Color.Unspecified) {
-                Log.d("Code", "this[$x, $y] = Color.Black")
-            }
-        }
     }
 
     fun calculateInitialOffset(screenWidth: Int, screenHeight: Int, density: Density) =
@@ -187,5 +179,9 @@ class CanvasEditorViewModel(
                 )
             }
         }
+    }
+
+    fun saveCanvas() {
+        projectsRepository.getProject(projectId).layer.canvas = editor.getLast()
     }
 }

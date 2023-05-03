@@ -19,8 +19,12 @@ class EffectsManager(
     private val canvasChannel: Channel<PixelatedCanvas> = Channel()
     val canvas: Flow<PixelatedCanvas> = canvasChannel.receiveAsFlow()
 
-    private val effects: List<StatelessEffect> = listOf(RainbowEffect(1000L))
-    private var baseCanvas: PixelatedCanvas = PixelatedCanvas.Default
+    private val effects: List<StatelessEffect> = listOf(BlinkSawEffect(period = 500))
+    var baseCanvas: PixelatedCanvas = PixelatedCanvas.Default
+        set(value)  {
+            ticker.pause()
+            field = value
+        }
 
     private var ticked = 0
     private var ticker: Ticker = PeriodTicker(TickDelay)

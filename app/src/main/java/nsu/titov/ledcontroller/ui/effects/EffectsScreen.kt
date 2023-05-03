@@ -28,6 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import nsu.titov.ledcontroller.R
 import nsu.titov.ledcontroller.data.repository.LedPanelRepositoryImpl
+import nsu.titov.ledcontroller.data.repository.ProjectsRepositoryInMemory
 import nsu.titov.ledcontroller.domain.model.canvas.PixelatedCanvas
 import nsu.titov.ledcontroller.ui.Spacing
 import nsu.titov.ledcontroller.ui.custom.canvas.PixelCanvasUIS
@@ -37,7 +38,10 @@ import nsu.titov.ledcontroller.ui.custom.canvas.PixelCanvasView
 fun EffectsScreen() {
     val context = LocalContext.current
     val viewModel = viewModel {
-        EffectsViewModel(LedPanelRepositoryImpl(context))
+        EffectsViewModel(
+            projectsRepository = ProjectsRepositoryInMemory,
+            ledRepository = LedPanelRepositoryImpl(context)
+        )
     }
 
     val colorSelectionUiState by viewModel.effectsEditorOpened.collectAsState()

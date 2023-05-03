@@ -14,11 +14,13 @@ import kotlinx.coroutines.withContext
 import nsu.titov.ledcontroller.domain.edit.effects.EffectsManager
 import nsu.titov.ledcontroller.domain.model.canvas.PixelatedCanvas
 import nsu.titov.ledcontroller.domain.repository.LedPanelRepository
+import nsu.titov.ledcontroller.domain.repository.ProjectsRepository
 import nsu.titov.ledcontroller.ui.custom.canvas.PixelCanvasUIS
 import nsu.titov.ledcontroller.ui.editor.PixelCanvasMapper
 
 class EffectsViewModel(
-    private val repository: LedPanelRepository,
+    private val projectsRepository: ProjectsRepository,
+    private val ledRepository: LedPanelRepository,
 ) : ViewModel() {
 
     private val effectsManager: EffectsManager = EffectsManager(viewModelScope)
@@ -40,6 +42,9 @@ class EffectsViewModel(
 
     init {
         viewModelScope.launch {
+            projectsRepository.getProject(0)?.let {
+                effectsManager.baseCanvas = it.layer.canvas
+            }
             effectsManager.canvas.collect(::onCanvasFromEffectsManager)
         }
     }
@@ -121,6 +126,6 @@ class EffectsViewModel(
 
     fun onApply() = viewModelScope.launch {
         val result = effectsManager.getResult()
-        repository.saveAnimation(result)
+        ledRepository.saveAnimation(result)
     }
 }

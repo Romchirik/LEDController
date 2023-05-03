@@ -19,7 +19,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
@@ -29,6 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import nsu.titov.ledcontroller.R
+import nsu.titov.ledcontroller.data.repository.ProjectsRepositoryInMemory
 import nsu.titov.ledcontroller.domain.edit.tools.ToolType
 import nsu.titov.ledcontroller.ui.Spacing
 import nsu.titov.ledcontroller.ui.custom.canvas.PixelCanvasView
@@ -39,8 +39,14 @@ import nsu.titov.ledcontroller.ui.custom.icons.SelectableIcon
 @Composable
 @Preview
 fun FrameEditorScreen(
-    viewModel: CanvasEditorViewModel = viewModel(),
+    routeToEffects: (Int) -> Unit = {},
 ) {
+    val viewModel = viewModel {
+        CanvasEditorViewModel(
+            projectId = 0,
+            projectsRepository = ProjectsRepositoryInMemory
+        )
+    }
 
     val canvasUiState by viewModel.canvasUiState.collectAsState()
     val toolsUiState by viewModel.toolsUiState.collectAsState()
@@ -97,7 +103,7 @@ fun FrameEditorScreen(
                                             canceled = false
                                         }
                                     }
-                                    if(pointers != 0) pointers--
+                                    if (pointers != 0) pointers--
                                 }
                                 PointerEventType.Move -> {
                                     if (pointers == 1 && !canceled) {
@@ -150,12 +156,16 @@ fun FrameEditorScreen(
                 contentDescription = "",
             )
         }
+
         IconButton(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(Spacing.Double)
                 .size(Spacing.Triple),
-            onClick = viewModel::onApply,
+            onClick = {
+                viewModel.saveCanvas()
+                routeToEffects(viewModel.projectId)
+            },
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_baseline_check_24),
